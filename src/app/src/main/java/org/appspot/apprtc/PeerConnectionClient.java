@@ -45,6 +45,8 @@ import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
+import org.webrtc.HardwareVideoDecoderFactory;
+import org.webrtc.HardwareVideoEncoderFactory;
 import org.webrtc.IceCandidate;
 import org.webrtc.IceCandidateErrorEvent;
 import org.webrtc.Logging;
@@ -434,9 +436,8 @@ public class PeerConnectionClient {
     final VideoDecoderFactory decoderFactory;
 
     if (peerConnectionParameters.videoCodecHwAcceleration) {
-      encoderFactory = new DefaultVideoEncoderFactory(
-          rootEglBase.getEglBaseContext(), true /* enableIntelVp8Encoder */, enableH264HighProfile);
-      decoderFactory = new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
+      encoderFactory = new HardwareVideoEncoderFactory(rootEglBase.getEglBaseContext(), true /* enableIntelVp8Encoder */, true, 2/* maxBframes */);
+      decoderFactory = new HardwareVideoDecoderFactory(rootEglBase.getEglBaseContext());
     } else {
       encoderFactory = new SoftwareVideoEncoderFactory();
       decoderFactory = new SoftwareVideoDecoderFactory();
