@@ -802,9 +802,9 @@ public class PeerConnectionClient {
   public void createOffer() {
     executor.execute(() -> {
       if (peerConnection != null && !isError) {
-        Log.d(TAG, "PC Create OFFER");
         isInitiator = true;
         peerConnection.createOffer(sdpObserver, sdpMediaConstraints);
+        Log.d(TAG, "PC create OFFSER\n" +sdpMediaConstraints.toString());
       }
     });
   }
@@ -812,9 +812,9 @@ public class PeerConnectionClient {
   public void createAnswer() {
     executor.execute(() -> {
       if (peerConnection != null && !isError) {
-        Log.d(TAG, "PC create ANSWER");
         isInitiator = false;
         peerConnection.createAnswer(sdpObserver, sdpMediaConstraints);
+        Log.d(TAG, "PC create ANSWER\n" + sdpMediaConstraints.toString());
       }
     });
   }
@@ -868,7 +868,7 @@ public class PeerConnectionClient {
         sdp = setStartBitrate(
             AUDIO_CODEC_OPUS, false, sdp, peerConnectionParameters.audioStartBitrate);
       }
-      Log.d(TAG, "Set remote SDP.");
+      Log.d(TAG, "Set remote SDP.\n" + sdp);
       SessionDescription sdpRemote = new SessionDescription(desc.type, sdp);
       peerConnection.setRemoteDescription(sdpObserver, sdpRemote);
     });
@@ -1345,7 +1345,7 @@ public class PeerConnectionClient {
       localDescription = newDesc;
       executor.execute(() -> {
         if (peerConnection != null && !isError) {
-          Log.d(TAG, "Set local SDP from " + desc.type);
+          Log.d(TAG, "Set local SDP from  \n" + newDesc.description);
           peerConnection.setLocalDescription(sdpObserver, newDesc);
         }
       });
