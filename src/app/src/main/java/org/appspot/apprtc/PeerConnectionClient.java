@@ -215,6 +215,7 @@ public class PeerConnectionClient {
     public final int videoFps;
     public final int videoMaxBitrate;
     public final String videoCodec;
+    public final int maxBFrames;
     public final boolean videoCodecHwAcceleration;
     public final boolean videoFlexfecEnabled;
     public final int audioStartBitrate;
@@ -231,7 +232,7 @@ public class PeerConnectionClient {
     private final DataChannelParameters dataChannelParameters;
 
     public PeerConnectionParameters(boolean videoCallEnabled, boolean loopback, boolean tracing,
-        int videoWidth, int videoHeight, int videoFps, int videoMaxBitrate, String videoCodec,
+        int videoWidth, int videoHeight, int videoFps, int videoMaxBitrate, String videoCodec, int maxBFrames,
         boolean videoCodecHwAcceleration, boolean videoFlexfecEnabled, int audioStartBitrate,
         String audioCodec, boolean noAudioProcessing, boolean aecDump, boolean saveInputAudioToFile,
         boolean useOpenSLES, boolean disableBuiltInAEC, boolean disableBuiltInAGC,
@@ -245,6 +246,7 @@ public class PeerConnectionClient {
       this.videoFps = videoFps;
       this.videoMaxBitrate = videoMaxBitrate;
       this.videoCodec = videoCodec;
+      this.maxBFrames = maxBFrames;
       this.videoFlexfecEnabled = videoFlexfecEnabled;
       this.videoCodecHwAcceleration = videoCodecHwAcceleration;
       this.audioStartBitrate = audioStartBitrate;
@@ -436,7 +438,7 @@ public class PeerConnectionClient {
     final VideoDecoderFactory decoderFactory;
 
     if (peerConnectionParameters.videoCodecHwAcceleration) {
-      encoderFactory = new HardwareVideoEncoderFactory(rootEglBase.getEglBaseContext(), true /* enableIntelVp8Encoder */, true, 2/* maxBframes */);
+      encoderFactory = new HardwareVideoEncoderFactory(rootEglBase.getEglBaseContext(), true /* enableIntelVp8Encoder */, true, peerConnectionParameters.maxBFrames/* maxBframes */);
       decoderFactory = new HardwareVideoDecoderFactory(rootEglBase.getEglBaseContext());
     } else {
       encoderFactory = new SoftwareVideoEncoderFactory();

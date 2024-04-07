@@ -378,6 +378,9 @@ public class ConnectActivity extends Activity {
     String videoCodec = sharedPrefGetString(R.string.pref_videocodec_key,CallActivity.EXTRA_VIDEOCODEC, R.string.pref_videocodec_default, useValuesFromIntent);
     String audioCodec = sharedPrefGetString(R.string.pref_audiocodec_key,CallActivity.EXTRA_AUDIOCODEC, R.string.pref_audiocodec_default, useValuesFromIntent);
 
+    // Get Max B-frames.
+    String maxBFrames =  sharedPrefGetString(R.string.pref_maxbframes_key,CallActivity.EXTRA_MAX_BFRAMES, R.string.pref_maxbframes_default, useValuesFromIntent);
+
     // Check HW codec flag.
     boolean hwCodec = sharedPrefGetBoolean(R.string.pref_hwcodec_key,CallActivity.EXTRA_HWCODEC_ENABLED, R.string.pref_hwcodec_default, useValuesFromIntent);
 
@@ -513,6 +516,7 @@ public class ConnectActivity extends Activity {
       intent.putExtra(CallActivity.EXTRA_VIDEO_CAPTUREQUALITYSLIDER_ENABLED, captureQualitySlider);
       intent.putExtra(CallActivity.EXTRA_VIDEO_BITRATE, videoStartBitrate);
       intent.putExtra(CallActivity.EXTRA_VIDEOCODEC, videoCodec);
+      intent.putExtra(CallActivity.EXTRA_MAX_BFRAMES, maxBFrames);
       intent.putExtra(CallActivity.EXTRA_HWCODEC_ENABLED, hwCodec);
       intent.putExtra(CallActivity.EXTRA_CAPTURETOTEXTURE_ENABLED, captureToTexture);
       intent.putExtra(CallActivity.EXTRA_FLEXFEC_ENABLED, flexfecEnabled);

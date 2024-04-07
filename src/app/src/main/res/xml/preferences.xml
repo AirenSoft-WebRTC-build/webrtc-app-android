@@ -65,6 +65,14 @@
             android:entries="@array/videoCodecs"
             android:entryValues="@array/videoCodecs" />
 
+        <ListPreference
+            android:key="@string/pref_maxbframes_key"
+            android:title="@string/pref_maxbframes_title"
+            android:defaultValue="@string/pref_maxbframes_default"
+            android:dialogTitle="@string/pref_maxbframes_dlg"
+            android:entries="@array/maxBframes"
+            android:entryValues="@array/maxBframes" />
+
         <CheckBoxPreference
             android:key="@string/pref_hwcodec_key"
             android:title="@string/pref_hwcodec_title"

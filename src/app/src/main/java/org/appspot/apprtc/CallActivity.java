@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.lang.RuntimeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.appspot.apprtc.AppRTCAudioManager.AudioDevice;
 import org.appspot.apprtc.AppRTCAudioManager.AudioManagerEvents;
@@ -82,6 +83,7 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
   public static final String EXTRA_VIDEO_CAPTUREQUALITYSLIDER_ENABLED = "org.appsopt.apprtc.VIDEO_CAPTUREQUALITYSLIDER";
   public static final String EXTRA_VIDEO_BITRATE = "org.appspot.apprtc.VIDEO_BITRATE";
   public static final String EXTRA_VIDEOCODEC = "org.appspot.apprtc.VIDEOCODEC";
+  public static final String EXTRA_MAX_BFRAMES = "org.appspot.apprtc.MAXBFRAMES";
   public static final String EXTRA_HWCODEC_ENABLED = "org.appspot.apprtc.HWCODEC";
   public static final String EXTRA_CAPTURETOTEXTURE_ENABLED = "org.appspot.apprtc.CAPTURETOTEXTURE";
   public static final String EXTRA_FLEXFEC_ENABLED = "org.appspot.apprtc.FLEXFEC";
@@ -298,6 +300,9 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
           intent.getIntExtra(EXTRA_MAX_RETRANSMITS, -1), intent.getStringExtra(EXTRA_PROTOCOL),
           intent.getBooleanExtra(EXTRA_NEGOTIATED, false), intent.getIntExtra(EXTRA_ID, -1));
     }
+
+    int maxBFrames = Integer.parseInt(Objects.requireNonNull(intent.getStringExtra(EXTRA_MAX_BFRAMES)));
+
     peerConnectionParameters =
         new PeerConnectionParameters(
                 intent.getBooleanExtra(EXTRA_VIDEO_CALL, true),
@@ -308,6 +313,7 @@ public class CallActivity extends Activity implements AppRTCClient.SignalingEven
                 intent.getIntExtra(EXTRA_VIDEO_FPS, 0),
                 intent.getIntExtra(EXTRA_VIDEO_BITRATE, 0),
                 intent.getStringExtra(EXTRA_VIDEOCODEC),
+                maxBFrames,
                 intent.getBooleanExtra(EXTRA_HWCODEC_ENABLED, true),
                 intent.getBooleanExtra(EXTRA_FLEXFEC_ENABLED, false),
                 intent.getIntExtra(EXTRA_AUDIO_BITRATE, 0),

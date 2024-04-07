@@ -33,6 +33,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
   private String keyprefMaxVideoBitrateType;
   private String keyprefMaxVideoBitrateValue;
   private String keyPrefVideoCodec;
+  private String keyPrefMaxBFrames;
   private String keyprefHwCodec;
   private String keyprefCaptureToTexture;
   private String keyprefFlexfec;
@@ -75,6 +76,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
     keyprefMaxVideoBitrateType = getString(R.string.pref_maxvideobitrate_key);
     keyprefMaxVideoBitrateValue = getString(R.string.pref_maxvideobitratevalue_key);
     keyPrefVideoCodec = getString(R.string.pref_videocodec_key);
+    keyPrefMaxBFrames = getString(R.string.pref_maxbframes_key);
     keyprefHwCodec = getString(R.string.pref_hwcodec_key);
     keyprefCaptureToTexture = getString(R.string.pref_capturetotexture_key);
     keyprefFlexfec = getString(R.string.pref_flexfec_key);
@@ -131,6 +133,8 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
     updateSummaryBitrate(sharedPreferences, keyprefMaxVideoBitrateValue);
     setVideoBitrateEnable(sharedPreferences);
     updateSummary(sharedPreferences, keyPrefVideoCodec);
+    updateSummary(sharedPreferences, keyPrefMaxBFrames);
+
     updateSummaryB(sharedPreferences, keyprefHwCodec);
     updateSummaryB(sharedPreferences, keyprefCaptureToTexture);
     updateSummaryB(sharedPreferences, keyprefFlexfec);
@@ -208,6 +212,7 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
         || key.equals(keyprefFps)
         || key.equals(keyprefMaxVideoBitrateType)
         || key.equals(keyPrefVideoCodec)
+        || key.equals(keyPrefMaxBFrames)
         || key.equals(keyprefStartAudioBitrateType)
         || key.equals(keyPrefAudioCodec)
         || key.equals(keyPrefRoomServerUrl)
@@ -260,6 +265,17 @@ public class SettingsActivity extends Activity implements OnSharedPreferenceChan
     Preference updatedPref = settingsFragment.findPreference(key);
     // Set summary to be the user-description for the selected value
     updatedPref.setSummary(sharedPreferences.getString(key, ""));
+
+    if(key.equals(keyPrefVideoCodec)) {
+        String codecName = sharedPreferences.getString(keyPrefVideoCodec, "");
+        if(codecName.equalsIgnoreCase("H264 High") || codecName.equalsIgnoreCase("H265")) {
+            settingsFragment.findPreference(keyPrefMaxBFrames).setEnabled(true);
+        }
+        else
+        {
+            settingsFragment.findPreference(keyPrefMaxBFrames).setEnabled(false);
+        }
+    }
   }
 
   private void updateSummaryBitrate(SharedPreferences sharedPreferences, String key) {
