@@ -7,21 +7,24 @@
 
     <ImageButton
         android:id="@+id/button_toggle_debug"
-        android:background="@android:drawable/ic_menu_info_details"
-        android:contentDescription="@string/toggle_debug"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
         android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="367dp"
+        android:layout_marginBottom="685dp"
+        android:background="@android:drawable/ic_menu_info_details"
+        android:contentDescription="@string/toggle_debug" />
 
     <TextView
         android:id="@+id/hud_stat_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textStyle="bold"
+        android:layout_alignParentStart="true"
+        android:layout_margin="8dp"
+        android:layout_marginStart="403dp"
         android:textColor="#C000FF00"
-        android:textSize="12sp"
-        android:layout_margin="8dp"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>

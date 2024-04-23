@@ -12,6 +12,7 @@ package org.appspot.apprtc;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import org.webrtc.RTCStats;
 import org.webrtc.RTCStatsReport;
+
+import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * Fragment for HUD statistics display.
@@ -37,6 +41,7 @@ public class HudFragment extends Fragment {
 
     // Create UI controls.
     statView = controlView.findViewById(R.id.hud_stat_call);
+      statView.setVisibility(View.VISIBLE);
     toggleDebugButton = controlView.findViewById(R.id.button_toggle_debug);
 
     toggleDebugButton.setOnClickListener(new View.OnClickListener() {
@@ -76,27 +81,73 @@ public class HudFragment extends Fragment {
     this.cpuMonitor = cpuMonitor;
   }
 
-  public void updateEncoderStatistics(final RTCStatsReport report) {
-    if (!isRunning || !displayHud) {
-      return;
+    public void updateEncoderStatistics(final RTCStatsReport report) {
+        if (!isRunning || !displayHud) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        if (cpuMonitor != null) {
+            sb.append("CPU%: ")
+                    .append(cpuMonitor.getCpuUsageCurrent())
+                    .append("/")
+                    .append(cpuMonitor.getCpuUsageAverage())
+                    .append(". Freq: ")
+                    .append(cpuMonitor.getFrequencyScaleAverage())
+                    .append("\n");
+        }
+
+        sb.append("[INBOUND-RTP]").append("\n");
+        for (RTCStats stat : report.getStatsMap().values()) {
+            if (stat.getType().equalsIgnoreCase("inbound-rtp") && stat.getMembers().get("kind").toString().equalsIgnoreCase("video")) {
+                sb.append("Size: ").append(stat.getMembers().get("frameWidth")).append("x").append(stat.getMembers().get("frameHeight")).append("\n");
+                sb.append("FrameDecoded:").append(stat.getMembers().get("framesDecoded")).append("(").append(stat.getMembers().get("framesPerSecond")).append(")").append("\n");
+                sb.append("keyFramesDecoded:").append(stat.getMembers().get("keyFramesDecoded")).append("\n");
+                sb.append("Bitrate:").append( String.format("%.0f", ((Number)stat.getMembers().get("bytesReceived")).doubleValue() / ((Number)stat.getMembers().get("totalDecodeTime")).doubleValue() ) ).append("\n");
+                sb.append("qpSum:").append( stat.getMembers().get("qpSum")).append("\n");
+            }
+        }
+        sb.append("\n");
+
+        sb.append("[OUTBOUND-RTP]").append("\n");
+        for (RTCStats stat : report.getStatsMap().values()) {
+            if (stat.getType().equalsIgnoreCase("outbound-rtp") && stat.getMembers().get("kind").toString().equalsIgnoreCase("video")) {
+                sb.append("Size: ").append(stat.getMembers().get("frameWidth")).append("x").append(stat.getMembers().get("frameHeight")).append("\n");
+                sb.append("FrameDecoded:").append(stat.getMembers().get("framesEncoded")).append("(").append(stat.getMembers().get("framesPerSecond")).append(")").append("\n");
+                sb.append("keyFramesEncoded:").append(stat.getMembers().get("keyFramesEncoded")).append("\n");
+                sb.append("Bitrate:").append( String.format("%.0f", ((Number)stat.getMembers().get("bytesSent")).doubleValue() / ((Number)stat.getMembers().get("totalEncodeTime")).doubleValue() ) ).append("\n");
+                sb.append("qpSum:").append( stat.getMembers().get("qpSum")).append("\n");
+
+            }
+        }
+        Log.d(getClass().getName(), sb.toString());
+
+        statView.setText(sb.toString());
     }
 
-    StringBuilder sb = new StringBuilder();
+    double objectToDouble(Object obj) {
+      if( obj instanceof Number ) {
+          Number number = (Number) obj;
+          if (number instanceof Integer) {
+              return (double) number.intValue();
+          } else if (number instanceof Long) {
+              return  (double) number.longValue();
+          } else if (number instanceof Float) {
+              return  (double)  number.floatValue();
+          } else if (number instanceof Double) {
+              return  (double) number.doubleValue();
+          } else if (number instanceof Byte) {
+              return  (double) number.byteValue();
+          } else if (number instanceof Short) {
+              return  (double) number.shortValue();
+          }
+      }
+      else if(obj instanceof String) {
+          return Double.parseDouble( (String)obj);
+      }
 
-    if (cpuMonitor != null) {
-      sb.append("CPU%: ")
-          .append(cpuMonitor.getCpuUsageCurrent())
-          .append("/")
-          .append(cpuMonitor.getCpuUsageAverage())
-          .append(". Freq: ")
-          .append(cpuMonitor.getFrequencyScaleAverage())
-          .append("\n");
+      return 10000000.0f;
     }
 
-    for (RTCStats stat : report.getStatsMap().values()) {
-      sb.append(stat.toString()).append("\n");
-    }
-
-    statView.setText(sb.toString());
-  }
 }
